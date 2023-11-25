@@ -48,6 +48,10 @@ try:
                 response = str(random.randint(1, 10))
                 client_socket.send(response.encode())
 
+            elif request == "EXIT":
+                response = "bye"
+                client_socket.send(response.encode())
+
             else:
                 response = 'Command was written not right. Please try again.'
                 client_socket.send(response.encode())
