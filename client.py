@@ -1,57 +1,35 @@
 import socket
-from datetime import datetime
-import random
-
-MAX_PACKET = 1024
-
-my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-try:
-
-    my_socket.connect(('127.0.0.1', 5746))
-    n = input()
-    if n == "EXIT":
-        my_socket.send('bye'.encode())
-
-        response = my_socket.recv(MAX_PACKET).decode()
-        print(response)
-    while n != "EXIT":
-        if n == "TIME":
-            time = str(datetime.now().time())
-            my_socket.send(time.encode())
-
-            response = my_socket.recv(MAX_PACKET).decode()
-
-        elif n == "NAME":
-            my_socket.send("The name of server is ObnS's server".encode())
-
-            response = my_socket.recv(MAX_PACKET).decode()
-
-        elif n == "RAND":
-            num = str(random.randint(1, 10))
-            my_socket.send(num.encode())
-
-            response = my_socket.recv(MAX_PACKET).decode()
-
-        else:
-            my_socket.send('Command was written not right. Please try again.'.encode())
-
-            response = my_socket.recv(MAX_PACKET).decode()
-
-        print(response)
-        n = input()
-
-        if n == "EXIT":
-            my_socket.send('bye'.encode())
-
-            response = my_socket.recv(MAX_PACKET).decode()
-            print(response)
 
 
-except socket.error as err:
+def main():
 
-    print('received socket error ' + str(err))
+    try:
+        # Connecting
+        my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        my_socket.connect(("127.0.0.1", 5746))
+        request = input()
 
-finally:
+        # Loop until getting EXIT
+        while request != "EXIT":
 
-    my_socket.close()
+            # Doesnt do nothing when we pull enter
+            if request == '':
+                request = input()
+
+            # Sends to the server our request
+            else:
+                my_socket.send(request.encode())
+                data = my_socket.recv(1024).decode()
+                print(data)
+                request = input()
+        print('bye')
+    # If we have any errors
+    except socket.error as err:
+        print('recieved socket error ' + str(err))
+
+    # Closing the programm any way
+    finally:
+        my_socket.close()
+
+if __name__ == '__main__':
+    main()
