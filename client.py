@@ -25,13 +25,15 @@ def main():
         my_socket.send(request.encode())
         data = my_socket.recv(1024).decode()
         print(data)
+        
     # If we have any errors
     except socket.error as err:
         print('recieved socket error ' + str(err))
 
-    # Closing the programm any way
+    # Closing the program any way
     finally:
         my_socket.close()
+
 
 if __name__ == '__main__':
     main()
