@@ -1,10 +1,9 @@
 """
-Author:
-Description:
-Date:
+Author: Oleg Shkolnik יא9.
+Description: Client that receive input commands from cmd, send them to the server, receive result and print it.
+Date: 6/12/23
 """
 import socket
-
 
 IP = "127.0.0.1"
 PORT = 5746
@@ -22,38 +21,57 @@ def validate_command(cmd: str):
 
 
 def main():
-
+    """
+    main function that connect client to server
+    """
     my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
     try:
-        # Connecting
+        """
+        connecting
+        """
         my_socket.connect((IP, PORT))
         request = input(PROMPT)
 
-        # Loop until getting EXIT
-        while request != "EXIT":
-            if validate_command(request):
-                # Doesnt do nothing when we pull enter
-                if request == '':
-                    request = input()
+        while request != COMMANDS[3]:
+            """
+            loop until getting EXIT
+            """
 
-                # Sends to the server our request
-                else:
+            if validate_command(request):
+                """
+                if command exist - continue
+                if not - send message with available functions and go to loop from the start
+                """
+
+                if request != '':
+                    """
+                    sending request to the server end receive answer
+                    """
                     my_socket.send(request.encode())
                     data = my_socket.recv(1024).decode()
                     print(data)
-                    request = input()
-            else:
-                print('invalid command')
-        my_socket.send(request.encode())
-        data = my_socket.recv(1024).decode()
-        print(data)
-        
-    # If we have any errors
-    except socket.error as err:
-        print('recieved socket error ' + str(err))
 
-    # Closing the program any way
+            else:
+                print('invalid command. available commands are: NAME/TIME/RAND/EXIT:')
+
+            request = input(PROMPT)
+
+        """
+        after the loop send message and go to finally closing socket
+        """
+        print('bye bye')
+
+    except socket.error as err:
+        """
+        for errors
+        """
+        print('received socket error ' + str(err))
+
     finally:
+        """
+        close the socket anyway
+        """
         my_socket.close()
 
 
