@@ -14,16 +14,6 @@ IP = "127.0.0.1"
 PORT = 5746
 
 COMMANDS = ['NAME', 'TIME', 'RAND', 'EXIT']
-ERR = 'Invalid command. Available commands are: NAME/TIME/RAND/EXIT:'
-
-
-def validate_command(request: str):
-    """
-    Validates that the user input is valid
-    :param request: the user command
-    :return: true if the command is valid
-    """
-    return request in COMMANDS
 
 
 def do_functions(request: str):
@@ -76,14 +66,11 @@ def main():
                     request = client_socket.recv(MAX_PACKET).decode()
                     print('server received ' + request)
 
-                    if validate_command(request):
-                        response = str(do_functions(request))
-
-                    elif request == 'EXIT':
+                    if request == 'EXIT':
                         break
 
                     else:
-                        response = ERR
+                        response = str(do_functions(request))
 
                     client_socket.send(response.encode())
 
@@ -116,11 +103,7 @@ if __name__ == '__main__':
     """
     checking function situations and launching the main
     """
-    assert validate_command('EXIT')
-    assert validate_command('NAME')
-    assert validate_command('RAND')
-    assert validate_command('TIME')
-    assert not validate_command('Oleg')
+
     assert do_functions('NAME')
     assert do_functions('RAND')
     assert do_functions('TIME')
