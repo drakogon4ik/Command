@@ -8,6 +8,7 @@ import socket
 
 IP = "127.0.0.1"
 PORT = 5746
+MAX_PACKET = 1024
 
 PROMPT = 'Please enter a command(NAME/TIME/RAND/EXIT): '
 ERR = 'Invalid command. Available commands are: NAME/TIME/RAND/EXIT:'
@@ -48,7 +49,7 @@ def main():
                 """
 
                 my_socket.send(request.encode())
-                data = my_socket.recv(1024).decode()
+                data = my_socket.recv(MAX_PACKET).decode()
                 print(data)
 
             else:
